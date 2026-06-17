@@ -1,18 +1,18 @@
 def solution(mats, park):
     n = len(park)
     m = len(park[0])
-    for size in sorted(mats, reverse=True):
-        for row in range(n-size+1):
-            for col in range(m-size+1):
-                place = True
-                for x in range(row,row+size):
-                    for y in range(col,col+size):
-                        if park[x][y]!='-1':
-                            place=False
+    mats.sort(reverse=True)
+    for size in mats:
+        for i in range(n - size + 1):
+            for j in range(m - size + 1):
+                possible = True
+                for r in range(i, i+size):
+                    for c in range(j, j+size):
+                        if park[r][c] != '-1':
+                            possible = False
                             break
-                    if not place:
-                        break
-                if place:
+                    if not possible:
+                        break   
+                if possible:
                     return size
-            
     return -1
