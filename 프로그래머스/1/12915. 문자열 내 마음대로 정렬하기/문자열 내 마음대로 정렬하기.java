@@ -2,13 +2,12 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] strings, int n) {
-        Arrays.sort(strings, (a,b) -> {
-            // n번째 문자 기준 정렬
-            if (a.charAt(n) != b.charAt(n)) {
-                return a.charAt(n) - b.charAt(n);
+        Arrays.sort(strings);
+        Arrays.sort(strings, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Character.compare(o1.charAt(n), o2.charAt(n));
             }
-            // n번째 문자가 같으면 사전순
-            return a.compareTo(b);
         });
         return strings;
     }
