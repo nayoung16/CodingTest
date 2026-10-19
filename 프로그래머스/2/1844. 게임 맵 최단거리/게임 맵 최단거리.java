@@ -1,47 +1,57 @@
 import java.util.*;
 
 class Solution {
+    int[] dy = {-1,1,0,0};
+    int[] dx = {0,0,-1,1};
+    int[][] maps;
+    int n;
+    int m;
     
-    static class Node {
-        int x;
+    class Node {
         int y;
+        int x;
+        int count;
         
-        Node(int x, int y) {
-            this.x = x;
+        Node(int y, int x, int count) {
             this.y = y;
+            this.x = x;
+            this.count = count;
         }
     }
     
-    public int solution(int[][] maps) {
-        int answer = 0;
-        int n = maps.length; //세로
-        int m = maps[0].length; //가로
-        
-        int[] dy = {-1, 1, 0, 0};
-        int[] dx = {0, 0, -1, 1};
+    public int bfs() {
+        Queue<Node> queue = new LinkedList<>();
         boolean[][] visited = new boolean[n][m];
-        Node node = new Node(0,0);
-        Queue<Node> queue = new ArrayDeque<>();
-        queue.add(node);
+        queue.offer(new Node(0,0,1));
         visited[0][0] = true;
         
-        if (maps[0][0] == 0) return -1;
-        
-        while(!queue.isEmpty()) {
-            Node curNode = queue.poll();
-            for (int i = 0; i<4; i++) {
-                int nx = curNode.x+dx[i];
-                int ny = curNode.y+dy[i];
-                if (ny < 0 || ny >= n || nx < 0 || nx >= m) continue;
-                if (maps[ny][nx] == 0 || visited[ny][nx]) continue;
-                
-                maps[ny][nx] = maps[curNode.y][curNode.x] + 1;
-                
-                visited[ny][nx] = true;
-                queue.add(new Node(nx,ny));
-                
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+            int y = cur.y;
+            int x = cur.x;
+            int count = cur.count;
+            
+            if (y == n-1 && x == m-1) {
+                return count;
+            }
+            
+            for (int i = 0; i < 4; i++) {
+                int ny = y + dy[i];
+                int nx = x + dx[i];
+                if (0 <= ny && ny < n && 0 <= nx && nx < m && maps[ny][nx] == 1 && !visited[ny][nx]) {
+                    visited[ny][nx] = true;
+                    queue.offer(new Node(ny,nx,count+1));
+                }
             }
         }
-        return visited[n-1][m-1] ? maps[n-1][m-1] : -1;
+        return -1;
+    }
+
+    public int solution(int[][] maps) {
+        n = maps.length;
+        m = maps[0].length;
+        
+        this.maps = maps;
+        return bfs();
     }
 }
